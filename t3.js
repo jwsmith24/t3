@@ -69,7 +69,7 @@ const gameBoard = function () {
 
     const clearBoard = () => {
         board.forEach((space, index) => {
-            space.placeMarker(`${index}`);
+            space.placeMarker(`_`);
         })
     }
 
