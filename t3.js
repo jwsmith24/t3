@@ -44,8 +44,8 @@ const gameBoard = function () {
     };
 
     const clearBoard = () => {
-        board.forEach((space) => {
-            space.placeMarker('_');
+        board.forEach((space, index) => {
+            space.placeMarker(`${index}`);
         })
     }
 
@@ -82,9 +82,30 @@ function createPlayer(name, symbol) {
     const getName = () => name;
     const getSymbol = () => symbol;
 
-
+    console.log(`${name} will be ${symbol}`);
     return { getName, getSymbol, increaseScore, resetScore, getScore, getName };
 }
 
 
 
+// Mediator-type module for the game logic
+const playGame = (() => {
+
+    // wrap up players in an object
+    const players = (() => {
+        let player1Name = "player1";
+        let player2Name = "player2";
+        const player1 = createPlayer(player1Name, 'X');
+        const player2 = createPlayer(player2Name, 'O');
+
+        return { player1, player2 };
+
+    })();
+
+
+
+
+
+
+
+})();
