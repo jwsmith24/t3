@@ -14,45 +14,31 @@ const gameBoard = function () {
     const board = [];
 
     const isGameOver = (symbol) => {
-        const r1 = board.slice(0, 3);
-        const r2 = board.slice(3, 6);
-        const r3 = board.slice(6, 9);
-        const rows = [r1, r2, r3];
 
-        const c1 = [board[0], board[3], board[6]];
-        const c2 = [board[1], board[4], board[7]];
-        const c3 = [board[2], board[5], board[8]];
-        const cols = [c1, c2, c3];
+        // Look for winning combinations
+        const winningSets = [
+            [board[0], board[1], board[2]], // First row
+            [board[3], board[4], board[5]], // Second row
+            [board[6], board[7], board[8]], // Third row
+            [board[0], board[3], board[6]], // First column
+            [board[1], board[4], board[7]], // Second column
+            [board[2], board[5], board[8]], // Third column
+            [board[0], board[4], board[8]], // Diagonal top-left to bottom-right
+            [board[2], board[4], board[6]]  // Diagonal top-right to bottom-left
+        ];
 
-        const d1 = [board[0], board[4], board[8]];
-        const d2 = [board[6], board[4], board[2]];
-        const diags = [d1, d2];
+        // Check each potential winning combination
+        for (let i = 0; i < winningSets.length; i++) {
 
-        // check rows
-        for (let row = 0; row < rows.length; row++) {
-            if (row[0] == symbol && row[1] == symbol && row[2] == symbol) {
-                return true;
+            // use destructuring to keep it clean!
+            const [a, b, c] = winningSets[i];
+            if (a.getPiece() === symbol && b.getPiece() === symbol && c.getPiece() === symbol) {
+                return true; // Player wins
             }
         }
 
-        // check columns
-        for (let col = 0; col < cols.length; col++) {
-            if (col[0] == symbol && col[1] == symbol && col[2] == symbol) {
-                return true;
-            }
-        }
-
-        // check diagnols
-        for (let diag = 0; diag < diags.length; diag++) {
-            if (diag[0] == symbol && diag[1] == symbol && diag[2] == symbol) {
-                return true;
-            }
-        }
-
-        return false;
-
-
-    }
+        return false; // No winner yet
+    };
 
     const initBoard = function () {
         for (let i = 0; i < 9; i++) {
@@ -91,7 +77,7 @@ const gameBoard = function () {
         // default to empty string;
         let marker = "";
         const placeMarker = (mark) => (marker = mark);
-        const hasPiece = () => (marker !== "");
+        const hasPiece = () => (marker === 'X' || marker === 'O');
         const getPiece = () => (marker);
 
         return { placeMarker, hasPiece, getPiece }
@@ -138,11 +124,15 @@ const playGame = (() => {
 
 
     // handle turn
-    function takeTurn(player, target) {
+    function takeTurn(player) {
 
         let picking = true;
 
         while (picking) {
+
+            let target = Math.floor(Math.random() * 9);
+
+
             if (!board.board[target].hasPiece()) {
                 board.board[target].placeMarker(player.getSymbol());
                 picking = false;
@@ -152,15 +142,22 @@ const playGame = (() => {
             }
         }
 
-
-
-        // check if any win conditions exist
-
     }
 
-    function endGame() {
+    function endGame(status, player) {
+        
+        board.displayBoard();
+        console.log('****************');
         console.log("Game over!");
-        console.log("Winner");
+        console.log("Results:");
+
+        if (status == "win") {
+            console.log(`${player.getName()} wins!`);
+        } else if (status === "tie") {
+            console.log("It's a tie!");
+        }
+
+
     }
 
     function runGame() {
@@ -174,22 +171,27 @@ const playGame = (() => {
             console.log('---------------');
 
             // player1 take turn
+            takeTurn(players.player1);
+
             // check win condition
             if (board.isGameOver(players.player1.getSymbol())) {
                 playing = false;
+                endGame("win", players.player1);
                 break;
 
             }
             // player2 take turn 
+            takeTurn(players.player2);
             // check win condition
             if (board.isGameOver(players.player2.getSymbol())) {
                 playing = false;
+                endGame("win", players.player2);
                 break;
             }
 
             if (turnCount === 9) {
-                console.log("It's a tie!")
                 playing = false;
+                endGame("tie")
             }
 
             turnCount++;
