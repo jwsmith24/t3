@@ -71,25 +71,28 @@ gameBoard.displayBoard();
 
 
 
-// Factory pattern for players since we'll need to create multiple.
-function createPlayer(name, symbol) {
-    let score = 0;
 
-    const increaseScore = () => score++;
-    const resetScore = () => score = 0;
-    const getScore = () => `${name}'s Score: ${score}`;
-
-    const getName = () => name;
-    const getSymbol = () => symbol;
-
-    console.log(`${name} will be ${symbol}`);
-    return { getName, getSymbol, increaseScore, resetScore, getScore, getName };
-}
 
 
 
 // Mediator-type module for the game logic
 const playGame = (() => {
+
+
+    // Factory pattern for players since we'll need to create multiple, but inside the module.
+    function createPlayer(name, symbol) {
+        let score = 0;
+
+        const increaseScore = () => score++;
+        const resetScore = () => score = 0;
+        const getScore = () => `${name}'s Score: ${score}`;
+
+        const getName = () => name;
+        const getSymbol = () => symbol;
+
+        console.log(`${name} will be ${symbol}`);
+        return { getName, getSymbol, increaseScore, resetScore, getScore, getName };
+    }
 
     // wrap up players in an object
     const players = (() => {
