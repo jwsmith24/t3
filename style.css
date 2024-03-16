@@ -26,6 +26,7 @@ body {
   -webkit-font-smoothing: antialiased;
   width: 100vw;
   height: 100vh;
+  font-family: "Roboto", sans-serif;
 
 }
 
@@ -77,4 +78,39 @@ h6 {
 ul {
   list-style-type: none;
   padding: 0;
+}
+
+div {
+  border: 1px solid purple;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: .2fr 1fr;
+  grid-template-columns: 1fr;
+}
+
+.header {
+  grid-row: 1/2;
+  grid-column: 1/2;
+  text-align: center;
+}
+
+.main {
+  grid-row: 2/3;
+  grid-column: 1/2;
+
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+
+
+}
+
+.game-board .space {
+  height: 200px;
+  width: 200px;
 }
