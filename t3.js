@@ -122,6 +122,19 @@ const playGame = (() => {
 
     })();
 
+    function endGame(stats, player) {
+
+        board.displayBoard();
+        console.log('****************');
+        console.log("Game over!");
+        console.log("Results:");
+
+        if (stats.gameStatus == "win") {
+            console.log(`${player.getName()} wins!`);
+        } else if (stats.gameStatus === "tie") {
+            console.log("It's a tie!");
+        }
+    }
 
     // handle turn
     function takeTurn(player) {
@@ -132,7 +145,6 @@ const playGame = (() => {
 
             let target = Math.floor(Math.random() * 9);
 
-
             if (!board.board[target].hasPiece()) {
                 board.board[target].placeMarker(player.getSymbol());
                 picking = false;
@@ -141,23 +153,18 @@ const playGame = (() => {
                 console.log("Space already has a piece, choose again!");
             }
         }
-
+        return checkGameStatus(player);
     }
 
-    function endGame(stats, player) {
+    function checkGameStatus(player) {
 
-        board.displayBoard();
-        console.log('****************');
-        console.log("Game over!");
-        console.log("Results:");
-
-        if (stats.gameStatus == "win") {
-            console.log(`${player.getName()} wins on turn ${stats.turnCount}!`);
-        } else if (stats.gameStatus === "tie") {
-            console.log("It's a tie!");
+        if (board.isGameOver(player.getSymbol())) {
+            let stats = { "gameStatus": "win" };
+            endGame(stats, player);
+            return true
         }
 
-
+        return false;
     }
 
     function runGame() {
@@ -170,30 +177,20 @@ const playGame = (() => {
             board.displayBoard();
             console.log('---------------');
 
-            // player1 take turn
-            takeTurn(players.player1);
-
-            // check win condition
-            if (board.isGameOver(players.player1.getSymbol())) {
-                playing = false;
-                let stats = { "gameStatus": "win", turnCount };
-                endGame(stats, players.player1);
+            // player1 take turn - true if game ends after turn
+            if (takeTurn(players.player1)) {
                 break;
-
             }
+
             // player2 take turn 
-            takeTurn(players.player2);
-            // check win condition
-            if (board.isGameOver(players.player2.getSymbol())) {
-                playing = false;
-                let stats = { "gameStatus": "win", turnCount };
-                endGame(stats, players.player2);
+            if (takeTurn(players.player2)) {
                 break;
             }
 
+            // end game when board is full after 9 turns
             if (turnCount === 9) {
                 playing = false;
-                let status = { "gameStatus": "tie", turnCount };
+                let status = { "gameStatus": "tie" };
                 endGame(status)
             }
 
