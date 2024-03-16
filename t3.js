@@ -8,7 +8,7 @@
 
 Each space is an object that know if its occupied and by what.*/
 
-// Module pattern for the gameboard since we only need to access it once.
+// Module pattern for the gameboard since we only need to create one.
 const gameBoard = function () {
 
     const board = [];
@@ -71,18 +71,20 @@ gameBoard.displayBoard();
 
 
 
-// Player constructor
-// Players enter their name, choose the symbol they want to use, and choose their color.
-function createPlayer(name, symbol, color) {
+// Factory pattern for players since we'll need to create multiple.
+function createPlayer(name, symbol) {
+    let score = 0;
 
-    const rollDice = () => {
-        console.log("rolllllllling!");
-    }
-    return { name, symbol, color, rollDice };
+    const increaseScore = () => score++;
+    const resetScore = () => score = 0;
+    const getScore = () => `${name}'s Score: ${score}`;
+
+    const getName = () => name;
+    const getSymbol = () => symbol;
+
+
+    return { getName, getSymbol, increaseScore, resetScore, getScore, getName };
 }
 
 
-const player1 = createPlayer("p1", "%", "blue");
-console.log(player1);
-player1.rollDice();
 
