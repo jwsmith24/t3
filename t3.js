@@ -144,16 +144,16 @@ const playGame = (() => {
 
     }
 
-    function endGame(status, player) {
-        
+    function endGame(stats, player) {
+
         board.displayBoard();
         console.log('****************');
         console.log("Game over!");
         console.log("Results:");
 
-        if (status == "win") {
-            console.log(`${player.getName()} wins!`);
-        } else if (status === "tie") {
+        if (stats.gameStatus == "win") {
+            console.log(`${player.getName()} wins on turn ${stats.turnCount}!`);
+        } else if (stats.gameStatus === "tie") {
             console.log("It's a tie!");
         }
 
@@ -176,7 +176,8 @@ const playGame = (() => {
             // check win condition
             if (board.isGameOver(players.player1.getSymbol())) {
                 playing = false;
-                endGame("win", players.player1);
+                let stats = { "gameStatus": "win", turnCount };
+                endGame(stats, players.player1);
                 break;
 
             }
@@ -185,13 +186,15 @@ const playGame = (() => {
             // check win condition
             if (board.isGameOver(players.player2.getSymbol())) {
                 playing = false;
-                endGame("win", players.player2);
+                let stats = { "gameStatus": "win", turnCount };
+                endGame(stats, players.player2);
                 break;
             }
 
             if (turnCount === 9) {
                 playing = false;
-                endGame("tie")
+                let status = { "gameStatus": "tie", turnCount };
+                endGame(status)
             }
 
             turnCount++;
