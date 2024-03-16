@@ -13,28 +13,39 @@ const gameBoard = function () {
 
     const board = [];
 
-    const isGameOver = (symbol) => {
-
+    const checkWin = (symbol) => {
         // Look for winning combinations
         const winningSets = [
-            [board[0], board[1], board[2]], // First row
-            [board[3], board[4], board[5]], // Second row
-            [board[6], board[7], board[8]], // Third row
-            [board[0], board[3], board[6]], // First column
-            [board[1], board[4], board[7]], // Second column
-            [board[2], board[5], board[8]], // Third column
-            [board[0], board[4], board[8]], // Diagonal top-left to bottom-right
-            [board[2], board[4], board[6]]  // Diagonal top-right to bottom-left
+            [0, 1, 2], // First row
+            [3, 4, 5], // Second row
+            [6, 7, 8], // Third row
+            [0, 3, 6], // First column
+            [1, 4, 7], // Second column
+            [2, 5, 8], // Third column
+            [0, 4, 8], // Diagonal top-left to bottom-right
+            [2, 4, 6]  // Diagonal top-right to bottom-left
         ];
 
         // Check each potential winning combination
         for (let i = 0; i < winningSets.length; i++) {
-
-            // use destructuring to keep it clean!
             const [a, b, c] = winningSets[i];
-            if (a.getPiece() === symbol && b.getPiece() === symbol && c.getPiece() === symbol) {
+            if (board[a].getPiece() === symbol && board[b].getPiece() === symbol && board[c].getPiece() === symbol) {
                 return true; // Player wins
             }
+        }
+        return false; // No winner yet
+    };
+
+
+
+    const isGameOver = (symbol) => {
+
+        if (checkWin(symbol)) {
+            return true;
+        }
+
+        if (board.every(space => space.hasPiece())) {
+            return true; // Tie
         }
 
         return false; // No winner yet
@@ -161,7 +172,7 @@ const playGame = (() => {
         if (board.isGameOver(player.getSymbol())) {
             let stats = { "gameStatus": "win" };
             endGame(stats, player);
-            return true
+            return true;
         }
 
         return false;
@@ -190,8 +201,8 @@ const playGame = (() => {
             // end game when board is full after 9 turns
             if (turnCount === 9) {
                 playing = false;
-                let status = { "gameStatus": "tie" };
-                endGame(status)
+                const stats = { "gameStatus": "tie" };
+                endGame(stats);
             }
 
             turnCount++;
