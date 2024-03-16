@@ -14,7 +14,8 @@ const gameBoard = function () {
     const board = [];
 
     const checkWin = (symbol) => {
-        // Look for winning combinations
+        
+        // All possible subsets that lead to a win if they all have the same value: (a 2D array would probably be a better approach to be more scalable)
         const winningSets = [
             [0, 1, 2], // First row
             [3, 4, 5], // Second row
@@ -28,8 +29,9 @@ const gameBoard = function () {
 
         // Check each potential winning combination
         for (let i = 0; i < winningSets.length; i++) {
-
+            // try out some destructuring!
             const [a, b, c] = winningSets[i];
+            
             if (board[a].getPiece() === symbol && board[b].getPiece() === symbol && board[c].getPiece() === symbol) {
                 return true; // Player wins
             }
