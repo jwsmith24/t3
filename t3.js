@@ -28,6 +28,7 @@ const gameBoard = function () {
 
         // Check each potential winning combination
         for (let i = 0; i < winningSets.length; i++) {
+
             const [a, b, c] = winningSets[i];
             if (board[a].getPiece() === symbol && board[b].getPiece() === symbol && board[c].getPiece() === symbol) {
                 return true; // Player wins
@@ -44,6 +45,7 @@ const gameBoard = function () {
             return true;
         }
 
+        // Check if board is filled
         if (board.every(space => space.hasPiece())) {
             return true; // Tie
         }
@@ -161,13 +163,14 @@ const playGame = (() => {
                 picking = false;
 
             } else {
-                console.log("Space already has a piece, choose again!");
+                console.log("This space already has a piece, choose again!");
             }
         }
         return checkGameStatus(player);
     }
 
     function checkGameStatus(player) {
+
 
         if (board.isGameOver(player.getSymbol())) {
             let stats = { "gameStatus": "win" };
@@ -196,13 +199,6 @@ const playGame = (() => {
             // player2 take turn 
             if (takeTurn(players.player2)) {
                 break;
-            }
-
-            // end game when board is full after 9 turns
-            if (turnCount === 9) {
-                playing = false;
-                const stats = { "gameStatus": "tie" };
-                endGame(stats);
             }
 
             turnCount++;
