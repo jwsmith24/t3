@@ -16,7 +16,7 @@
         <div class="header">
             <h1>Tic Tac Toe: Javascript Edition</h1>
             <div class="controls">
-                <button id="start-reset">Start Game</button>
+                <button id="new-game">New Game</button>
 
             </div>
         </div>
@@ -26,13 +26,13 @@
 
                     <h3>Player 1</h3>
                     <p id="p1-name"></p>
-                    <p id="p1-score">Score:</p>
+                    <p>Score: <span id="p1-score"></span></p>
                 </div>
                 <div class="player-info">
 
                     <h3>Player 2</h3>
                     <p id="p2-name"></p>
-                    <p id="p2-score">Score:</p>
+                    <p>Score: <span id="p2-score"></span></p>
                 </div>
             </div>
             <div class="game-board">
@@ -65,15 +65,11 @@
                     <h4>I'm a space</h4>
                 </div>
 
-
-
-
-
-
             </div>
         </div>
-        <dialog class="popup">
-            <form>
+        <dialog id="popup">
+            <form class="info">
+                <p class="popup-header">Let's Play!</p>
                 <p>
                     <label for="p1-name">Player 1 Name:</label>
                     <input type="text" id="p1-name" name="p1-name" required maxlength="30">
@@ -82,6 +78,12 @@
                     <label for="p2-name">Player 2 Name:</label>
                     <input type="text" id="p2-name" name="p2-name" required maxlength="30">
                 </p>
+                <div class="modal-buttons">
+                    <button id="start-game">Start Game!</button>
+                    <button id="cancel">Cancel</button>
+
+                </div>
+
             </form>
         </dialog>
     </div>

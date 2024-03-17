@@ -14,7 +14,7 @@ const gameBoard = function () {
     const board = [];
 
     const checkWin = (symbol) => {
-        
+
         // All possible subsets that lead to a win if they all have the same value: (a 2D array would probably be a better approach to be more scalable)
         const winningSets = [
             [0, 1, 2], // First row
@@ -31,7 +31,7 @@ const gameBoard = function () {
         for (let i = 0; i < winningSets.length; i++) {
             // try out some destructuring!
             const [a, b, c] = winningSets[i];
-            
+
             if (board[a].getPiece() === symbol && board[b].getPiece() === symbol && board[c].getPiece() === symbol) {
                 return true; // Player wins
             }
@@ -208,5 +208,40 @@ const playGame = (() => {
     }
 
     runGame();
+
+})();
+
+// UI Module
+const userInterface = (() => {
+
+    const newGameButton = document.getElementById("new-game");
+    const newGamePopUp = document.getElementById("popup");
+    const startGameButton = document.getElementById('start-game');
+    const cancelButton = document.getElementById('cancel');
+
+    const p1Score = document.getElementById('p1-score');
+    const p2Score = document.getElementById('p2-score');
+
+    newGameButton.addEventListener('click', () => {
+
+        newGamePopUp.showModal();
+
+    });
+
+    startGameButton.addEventListener('click', () => {
+        newGameButton.textContent = "Reset Game";
+        p1Score.textContent = 0;
+        p2Score.textContent = 0;
+    });
+
+    cancelButton.addEventListener('click', () => {
+        newGamePopUp.close();
+    });
+
+
+
+
+
+
 
 })();

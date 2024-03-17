@@ -110,8 +110,10 @@ ul {
 .main {
   grid-row: 2/3;
   grid-column: 1/2;
+
   align-content: center;
   justify-content: center;
+
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: .2fr .6fr;
@@ -127,15 +129,16 @@ ul {
 
 }
 
-#start-reset {
-  background-color: var(--sky100);
-  border: 1px solid transparent;
+button {
+  border: 1px solid rgba(0, 0, 0, 0.2);
   margin: 8px;
-  margin-right: 15px;
   border-radius: 5px;
+  background-color: var(--sky100);
+  margin-right: 15px;
 }
 
-#start-reset:hover {
+
+button:hover {
   background-color: var(--sky400);
 }
 
@@ -146,6 +149,16 @@ ul {
 
   display: grid;
   justify-items: start;
+  padding: 10px;
+}
+
+#p1-score {
+  color: green;
+}
+
+#p2-score {
+  color: green;
+
 }
 
 .game-board {
@@ -155,7 +168,7 @@ ul {
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(150px, 1fr));
 
 
   justify-content: center;
@@ -167,20 +180,62 @@ ul {
   background-color: var(--sky100);
 }
 
-.popup {
+
+#popup {
   position: fixed;
   top: 25%;
   left: 25%;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 0 10px 2px rgba(30, 255, 41, 0.623);
+  background-color: whitesmoke;
+
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fit, 1fr);
+
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
 
 
+.modal-buttons {
+  display: flex;
+}
 
+.modal-buttons button {
+  background-color: rgba(30, 255, 41, 0.2);
+}
+
+.info button:hover {
+  background-color: rgba(30, 255, 41, 0.5);
+}
+
+.popup-header {
+  margin-bottom: 15px;
+  font-weight: bolder;
+  font-size: 1.5rem;
+}
+
+:focus {
+  outline: none;
+  border: 1px solid transparent;
+  box-shadow: 0 0 10px 1px rgba(30, 255, 41, 0.623);
 }
 
 ::backdrop {
   background-image: linear-gradient(45deg,
-      magenta,
-      rebeccapurple,
-      dodgerblue,
-      green);
-  opacity: 0.75;
+      rgb(43, 255, 0),
+      rgb(51, 150, 153),
+      rgb(255, 165, 30),
+      rgb(23, 0, 128));
+  opacity: .9;
 }
