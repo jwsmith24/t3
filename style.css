@@ -104,6 +104,12 @@ ul {
   grid-row: 1/2;
   grid-column: 1/2;
   text-align: center;
+  margin-top: 5px;
+}
+
+.header h3 {
+  font-style: italic;
+  margin-bottom: 2px;
 }
 
 .main {

@@ -129,8 +129,8 @@ const playGame = (() => {
     const players = (() => {
         let player1Name = "player1";
         let player2Name = "player2";
-        const player1 = createPlayer(player1Name, 'X');
-        const player2 = createPlayer(player2Name, 'O');
+        const player1 = createPlayer(player1Name, '{ }');
+        const player2 = createPlayer(player2Name, ';');
 
         return { player1, player2 };
 
