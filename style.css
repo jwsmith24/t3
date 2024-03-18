@@ -97,7 +97,6 @@ ul {
   display: grid;
   grid-template-rows: .2fr 1fr;
   grid-template-columns: 1fr;
-  gap: 10px;
 }
 
 .header {
@@ -105,6 +104,7 @@ ul {
   grid-column: 1/2;
   text-align: center;
   margin-top: 5px;
+
 }
 
 .header h3 {
@@ -124,15 +124,26 @@ ul {
   grid-template-columns: .2fr .6fr;
 
   gap: 10px;
+  background-color: var(--sky100);
+  padding: 10px;
+
 
 }
 
 .controls {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  justify-content: center;
   background-color: var(--sky300);
 
+  grid-template-columns: .4fr .2fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-items: center;
+
+  justify-content: space-between;
 }
+
+
 
 button {
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -178,9 +189,11 @@ button:hover {
   justify-items: center;
   align-items: center;
 
-  gap: 0;
-  margin: 0;
-  background-color: var(--sky100);
+  gap: 1px;
+  margin: 2px;
+
+  background-color: black;
+
 }
 
 
@@ -247,25 +260,22 @@ button:hover {
   position: relative;
   border: 1px solid black;
   padding: 5px;
+  width: 100%;
+  height: 100%;
+
+
+  background-color: var(--sky200);
 
 
 }
 
 .space::after {
+  content: attr(data-marker);
   position: absolute;
-  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
 
-
-
-}
-
-.curly-braces {
-  content: url(resources/curly-braces-svgrepo-com.svg);
-  width: 75%;
-}
-
-.semi-colon {
-  content: url(resources/semicolon-svgrepo-com.svg);
-  width: 75%;
 
 }

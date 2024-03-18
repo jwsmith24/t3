@@ -8,6 +8,9 @@
 
 Each space is an object that know if its occupied and by what.*/
 
+
+
+
 // Module pattern for the gameboard since we only need to create one.
 const gameBoard = function () {
 
@@ -64,27 +67,9 @@ const gameBoard = function () {
 
     };
 
-    const displayBoard = () => {
-
-        let row1 = '', row2 = '', row3 = '';
-        board.forEach((space, index) => {
-
-            if (index <= 2) {
-                row1 += `${space.getPiece()} `;
-            } else if (index > 2 && index < 6) {
-                row2 += `${space.getPiece()} `;
-            } else {
-                row3 += `${space.getPiece()} `;
-            }
-        })
-        console.log(row1);
-        console.log(row2);
-        console.log(row3);
-    };
-
     const clearBoard = () => {
         board.forEach((space, index) => {
-            space.placeMarker(`_`);
+            space.placeMarker(``);
         })
     }
 
@@ -92,18 +77,20 @@ const gameBoard = function () {
         // default to empty string;
         let marker = "";
         const placeMarker = (mark) => (marker = mark);
-        const hasPiece = () => (marker === 'X' || marker === 'O');
+        const hasPiece = () => (marker === '{ }' || marker === ';');
         const getPiece = () => (marker);
 
         return { placeMarker, hasPiece, getPiece }
     };
 
-    // Place spaces onto the board, don't need to expose this.
     initBoard();
 
-    return { board, clearBoard, displayBoard, isGameOver };;
+    return { board, clearBoard, isGameOver, initBoard };;
 
 }();
+
+
+
 
 // Factory pattern for players since we'll need to create multiple.
 function createPlayer(name, symbol) {
@@ -123,7 +110,13 @@ function createPlayer(name, symbol) {
 // Mediator-type module for the game logic
 const playGame = (() => {
 
+    let turnCount = 1;
+
+    const incrementTurnCount = () => turnCount++;
+
+    // actual board represented as an array
     const board = gameBoard;
+
 
     // Create players and wrap them up nicely in an object
     const players = (() => {
@@ -138,7 +131,7 @@ const playGame = (() => {
 
     function endGame(stats, player) {
 
-        board.displayBoard();
+
         console.log('****************');
         console.log("Game over!");
         console.log("Results:");
@@ -184,12 +177,16 @@ const playGame = (() => {
 
     function runGame() {
 
+
+        display.refreshGameBoard();
+
+
         let playing = true;
-        let turnCount = 1;
+
         while (playing) {
 
             console.log(`Turn: ${turnCount}`);
-            board.displayBoard();
+
             console.log('---------------');
 
             // player1 take turn - true if game ends after turn
@@ -197,60 +194,114 @@ const playGame = (() => {
                 playing = false;
                 break;
             }
+            display.refreshGameBoard();
 
             // player2 take turn 
             if (takeTurn(players.player2)) {
                 playing = false;
                 break;
             }
+            display.refreshGameBoard();
 
-            turnCount++;
+            incrementTurnCount();
+
         }
     }
 
-    return { runGame };
+    return { runGame, incrementTurnCount };
 
 })();
 
 
-playGame.runGame();
+
 
 // UI Module
 const display = (() => {
 
+    // Controls
     const newGameButton = document.getElementById("new-game");
     const newGamePopUp = document.getElementById("popup");
     const startGameButton = document.getElementById('start-game');
     const cancelButton = document.getElementById('cancel');
 
+    // Player info
     const p1Score = document.getElementById('p1-score');
     const p2Score = document.getElementById('p2-score');
 
+    // Gameboard
+    const gameBoardDisplay = document.querySelector('.game-board');
+
+
+    gameBoardDisplay.addEventListener('click', (event) => {
+        console.log(event.target.id);
+
+        // id format: "space-#"
+        const spaceIndex = parseInt(event.target.id.split('-')[1]);
+        console.log("spaceIndexString:", spaceIndex);
+
+        if (!gameBoard.board[spaceIndex].hasPiece()) {
+
+            // player 1 - evens, player 2 - odds
+            const currentPlayer = turnCount % 2 === 0 ? players.player1 : players.player2;
+            gameBoard.board[spaceIndex].placeMarker(currentPlayer.getPiece());
+            display.refreshGameBoard(); // refresh UI
+
+            playGame.incrementTurnCount();
+
+        } else {
+
+            console.log("space taken!");
+
+        }
+    })
+
+
     newGameButton.addEventListener('click', () => {
-
         newGamePopUp.showModal();
-
     });
 
     startGameButton.addEventListener('click', () => {
         newGameButton.textContent = "Reset Game";
+        setPlayerNames();
         p1Score.textContent = 0;
         p2Score.textContent = 0;
     });
+
+    function setPlayerNames() {
+        const p1Name = document.getElementById('p1-display-name');
+        const p2Name = document.getElementById('p2-display-name');
+
+        const p1input = document.getElementById('p1-name').value;
+        const p2input = document.getElementById('p2-name').value;
+
+        p1Name.textContent = p1input;
+        p2Name.textContent = p2input;
+    }
 
     cancelButton.addEventListener('click', () => {
         newGamePopUp.close();
     });
 
 
-    function initGameBoard() {
+    const refreshGameBoard = () => {
 
+        gameBoardDisplay.innerHTML = "";
+
+        gameBoard.board.forEach((item, index) => {
+            const space = document.createElement('div');
+            space.id = `space-${index}`;
+            space.classList.add("space");
+
+            space.setAttribute('data-marker', gameBoard.board[index].getPiece());
+
+            gameBoardDisplay.appendChild(space);
+
+        });
     }
 
 
-
-
-
-
+    return { refreshGameBoard };
 
 })();
+
+playGame.runGame();
