@@ -1,16 +1,5 @@
 /* Tic Tac Toe */
 
-/* The board is represented with an array of 9 spaces
-    By index:
-            0 1 2
-            3 4 5
-            6 7 8
-
-Each space is an object that know if its occupied and by what.*/
-
-
-
-
 // Module pattern for the gameboard since we only need to create one.
 const gameBoard = function () {
 
@@ -47,12 +36,12 @@ const gameBoard = function () {
     const isGameOver = (symbol) => {
 
         if (checkWin(symbol)) {
-            return true;
+            return { status: "win" };
         }
 
         // Check if board is filled
         if (board.every(space => space.hasPiece())) {
-            return true; // Tie
+            return { status: "tie" }; // Tie
         }
 
         return false; // No winner yet
@@ -110,9 +99,9 @@ function createPlayer(name, symbol) {
 // Mediator-type module for the game logic
 const playGame = (() => {
 
-    let turnCount = 1;
+    let roundCount = 1;
 
-    const incrementTurnCount = () => turnCount++;
+    const incrementRoundCount = () => roundCount++;
 
     // actual board represented as an array
     const board = gameBoard;
@@ -136,7 +125,7 @@ const playGame = (() => {
         console.log("Game over!");
         console.log("Results:");
 
-        if (stats.gameStatus == "win") {
+        if (stats.gameStatus === "win") {
             console.log(`${player.getName()} wins!`);
         } else if (stats.gameStatus === "tie") {
             console.log("It's a tie!");
@@ -160,15 +149,21 @@ const playGame = (() => {
                 console.log("This space already has a piece, choose again!");
             }
         }
+        //display.refreshGameBoard();
         return checkGameStatus(player);
     }
 
     function checkGameStatus(player) {
 
+        const result = board.isGameOver(player.getSymbol());
 
-        if (board.isGameOver(player.getSymbol())) {
+        if (result.status === "Win") {
             let stats = { "gameStatus": "win" };
             endGame(stats, player);
+            return true;
+        } else if (result.status === "tie") {
+            let stats = { "gameStatus": "tie" };
+            endGame(stats);
             return true;
         }
 
@@ -177,15 +172,11 @@ const playGame = (() => {
 
     function runGame() {
 
-
-        display.refreshGameBoard();
-
-
         let playing = true;
 
         while (playing) {
 
-            console.log(`Turn: ${turnCount}`);
+            console.log(`Turn: ${roundCount}`);
 
             console.log('---------------');
 
@@ -194,21 +185,21 @@ const playGame = (() => {
                 playing = false;
                 break;
             }
-            display.refreshGameBoard();
+
 
             // player2 take turn 
             if (takeTurn(players.player2)) {
                 playing = false;
                 break;
             }
-            display.refreshGameBoard();
 
-            incrementTurnCount();
+
+            incrementRoundCount();
 
         }
     }
 
-    return { runGame, incrementTurnCount };
+    return { runGame, incrementRoundCount };
 
 })();
 
