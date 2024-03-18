@@ -123,7 +123,6 @@ function createPlayer(name, symbol) {
 // Mediator-type module for the game logic
 const playGame = (() => {
 
-
     const board = gameBoard;
 
     // Create players and wrap them up nicely in an object
@@ -195,11 +194,13 @@ const playGame = (() => {
 
             // player1 take turn - true if game ends after turn
             if (takeTurn(players.player1)) {
+                playing = false;
                 break;
             }
 
             // player2 take turn 
             if (takeTurn(players.player2)) {
+                playing = false;
                 break;
             }
 
@@ -207,12 +208,15 @@ const playGame = (() => {
         }
     }
 
-    runGame();
+    return { runGame };
 
 })();
 
+
+playGame.runGame();
+
 // UI Module
-const userInterface = (() => {
+const display = (() => {
 
     const newGameButton = document.getElementById("new-game");
     const newGamePopUp = document.getElementById("popup");
@@ -237,6 +241,11 @@ const userInterface = (() => {
     cancelButton.addEventListener('click', () => {
         newGamePopUp.close();
     });
+
+
+    function initGameBoard() {
+
+    }
 
 
 
