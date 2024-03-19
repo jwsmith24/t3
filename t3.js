@@ -72,6 +72,7 @@ const gameBoard = function () {
         return { placeMarker, hasPiece, getPiece }
     };
 
+    // ensure board is initialized first
     initBoard();
 
     return { board, clearBoard, isGameOver, initBoard };;
@@ -101,7 +102,11 @@ const playGame = (() => {
 
     let roundCount = 1;
 
+    const getRound = () => roundCount;
+    const getPlayers = () => players;
+
     const incrementRoundCount = () => roundCount++;
+
 
     // actual board represented as an array
     const board = gameBoard;
@@ -132,27 +137,6 @@ const playGame = (() => {
         }
     }
 
-    // handle turn
-    function takeTurn(player) {
-
-        let picking = true;
-
-        while (picking) {
-
-            let target = Math.floor(Math.random() * 9);
-
-            if (!board.board[target].hasPiece()) {
-                board.board[target].placeMarker(player.getSymbol());
-                picking = false;
-
-            } else {
-                console.log("This space already has a piece, choose again!");
-            }
-        }
-        display.refreshGameBoard();
-        return checkGameStatus(player);
-    }
-
     function checkGameStatus(player) {
 
         const result = board.isGameOver(player.getSymbol());
@@ -170,41 +154,9 @@ const playGame = (() => {
         return false;
     }
 
-    function runGame() {
-
-        let playing = true;
-
-        while (playing) {
-
-            console.log(`Turn: ${roundCount}`);
-
-            console.log('---------------');
-
-            // player1 take turn - true if game ends after turn
-            if (takeTurn(players.player1)) {
-                playing = false;
-                break;
-            }
-
-
-            // player2 take turn 
-            if (takeTurn(players.player2)) {
-                playing = false;
-                break;
-            }
-
-
-            incrementRoundCount();
-
-        }
-    }
-
-    return { runGame, incrementRoundCount };
+    return { getRound, incrementRoundCount, getPlayers };
 
 })();
-
-
-
 
 // UI Module
 const display = (() => {
@@ -225,6 +177,8 @@ const display = (() => {
 
     gameBoardDisplay.addEventListener('click', (event) => {
         console.log(event.target.id);
+        const players = playGame.getPlayers();
+        console.log(players);
 
         // id format: "space-#"
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
@@ -233,11 +187,12 @@ const display = (() => {
         if (!gameBoard.board[spaceIndex].hasPiece()) {
 
             // player 1 - evens, player 2 - odds
-            const currentPlayer = turnCount % 2 === 0 ? players.player1 : players.player2;
-            gameBoard.board[spaceIndex].placeMarker(currentPlayer.getPiece());
-            display.refreshGameBoard(); // refresh UI
+            const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
-            playGame.incrementTurnCount();
+            gameBoard.board[spaceIndex].placeMarker(currentPlayer.getSymbol());
+            refreshGameBoard(); // refresh UI
+
+            playGame.incrementRoundCount();
 
         } else {
 
@@ -247,15 +202,18 @@ const display = (() => {
     })
 
 
+
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
     });
 
-    startGameButton.addEventListener('click', () => {
+    startGameButton.addEventListener('click', (e) => {
+        e.preventDefault();
         newGameButton.textContent = "Reset Game";
         setPlayerNames();
         p1Score.textContent = 0;
         p2Score.textContent = 0;
+        newGamePopUp.close();
     });
 
     function setPlayerNames() {
@@ -266,7 +224,9 @@ const display = (() => {
         const p2input = document.getElementById('p2-name').value;
 
         p1Name.textContent = p1input;
+        console.log(p1Name.textContent);
         p2Name.textContent = p2input;
+        console.log(p2Name.textContent);
     }
 
     cancelButton.addEventListener('click', () => {
@@ -295,4 +255,4 @@ const display = (() => {
 
 })();
 
-playGame.runGame();
+display.refreshGameBoard();
