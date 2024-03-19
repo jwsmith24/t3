@@ -90,13 +90,18 @@ function createPlayer(name, symbol) {
 
     const increaseScore = () => score++;
     const resetScore = () => score = 0;
-    const getScore = () => `${name}'s Score: ${score}`;
+    const getScore = () => score;
 
     const getName = () => name;
     const getSymbol = () => symbol;
 
+    const setName = (nickName) => {
+        name = nickName;
+        console.log(`Name changed to ${getName()}`);
+    }
+
     console.log(`${name} will be ${symbol}`);
-    return { getName, getSymbol, increaseScore, resetScore, getScore, getName };
+    return { getName, getSymbol, increaseScore, resetScore, getScore, getName, setName };
 }
 
 // Mediator-type module for the game logic
@@ -105,7 +110,7 @@ const playGame = (() => {
     let roundCount = 1;
 
     const getRound = () => roundCount;
-    const getPlayers = () => players();
+    const getPlayers = () => players;
 
     const incrementRoundCount = () => roundCount++;
 
@@ -124,7 +129,7 @@ const playGame = (() => {
 
         return { player1, player2 };
 
-    });
+    })();
 
 
 
@@ -141,7 +146,7 @@ const playGame = (() => {
             return { "gameStatus": "tie", player };
         }
 
-        return { "gameStatus": "playing" };
+        return { "gameStatus": "playing", player };
     };
 
     return { getRound, incrementRoundCount, getPlayers, checkGameStatus };
@@ -166,6 +171,7 @@ const display = (() => {
     // Player info
     const p1Name = document.getElementById('p1-display-name');
     const p2Name = document.getElementById('p2-display-name');
+    const players = playGame.getPlayers();
 
     // Gameboard
     const gameBoardDisplay = document.querySelector('.game-board');
@@ -202,6 +208,7 @@ const display = (() => {
 
         if (result.gameStatus === "win") {
             results.textContent = `${result.player.getName()} wins!`
+            updateScore(result.player);
 
             endGamePopup.showModal();
         }
@@ -253,14 +260,33 @@ const display = (() => {
         p2Score.textContent = 0;
     }
 
+    function updateScore(player) {
+        const p1Score = document.getElementById('p1-score');
+        const p2Score = document.getElementById('p2-score');
+
+        player.increaseScore();
+        const newScore = player.getScore();
+
+        if (player.getSymbol() === ';') {
+            p2Score.textContent = newScore;
+
+        } else {
+            p1Score.textContent = newScore;
+        }
+
+
+
+
+    }
+
     function setPlayerNames() {
         const p1input = document.getElementById('p1-name');
         const p2input = document.getElementById('p2-name');
 
         p1Name.textContent = p1input.value;
+        players.player1.setName(p1input.value);
         p2Name.textContent = p2input.value;
-
-        // create character objects
+        players.player2.setName(p2input.value);
 
     }
 
@@ -278,7 +304,7 @@ const display = (() => {
     const resetBoard = () => {
         boardOptions.clearBoard();
         refreshGameBoard();
-        resetScore();
+
 
     };
 
