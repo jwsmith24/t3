@@ -126,12 +126,9 @@ const playGame = (() => {
 
     })();
 
+    // Displays game end dialog after win or tie conditions are met. Displays results and updates player score and resets the board.
     function endGame(stats, player) {
 
-
-        console.log('****************');
-        console.log("Game over!");
-        console.log("Results:");
 
         if (stats.gameStatus === "win") {
             console.log(`${player.getName()} wins!`);
@@ -140,6 +137,7 @@ const playGame = (() => {
         }
     }
 
+    // Checks all the potential winning subsets to see if all values match a player's symbol.
     function checkGameStatus(player) {
 
         const result = boardOptions.isGameOver(player.getSymbol());
@@ -166,16 +164,13 @@ const display = (() => {
 
     // Controls
     const newGameButton = document.getElementById("new-game");
-    const newGamePopUp = document.getElementById("popup");
+    const newGamePopUp = document.getElementById("start-popup");
     const startGameButton = document.getElementById('start-game');
     const cancelButton = document.getElementById('cancel');
 
     // Player info
     const p1Name = document.getElementById('p1-display-name');
     const p2Name = document.getElementById('p2-display-name');
-
-    const p1Score = document.getElementById('p1-score');
-    const p2Score = document.getElementById('p2-score');
 
     // Gameboard
     const gameBoardDisplay = document.querySelector('.game-board');
@@ -220,23 +215,31 @@ const display = (() => {
 
     startGameButton.addEventListener('click', (e) => {
         e.preventDefault();
-
-        newGameButton.textContent = "Reset Game";
-
         setPlayerNames();
-        p1Score.textContent = 0;
-        p2Score.textContent = 0;
+        newGameButton.textContent = "Reset Game";
+        resetBoard();
+
+
+
+
         clearInputs();
         newGamePopUp.close();
     });
+
+    function resetScore() {
+        const p1Score = document.getElementById('p1-score');
+        const p2Score = document.getElementById('p2-score');
+        p1Score.textContent = 0;
+        p2Score.textContent = 0;
+    }
 
     function setPlayerNames() {
         const p1input = document.getElementById('p1-name');
         const p2input = document.getElementById('p2-name');
 
-        p1Name.value = p1input;
-        p2Name.value = p2input;
-       
+        p1Name.textContent = p1input.value;
+        p2Name.textContent = p2input.value;
+
     }
 
     function clearInputs() {
@@ -245,7 +248,7 @@ const display = (() => {
 
         p1input.value = '';
         p2input.value = '';
-     
+
 
     };
 
@@ -263,6 +266,7 @@ const display = (() => {
         p1Score.textContent = 0;
         p2Score.textContent = 0;
         refreshGameBoard();
+
     }
 
 

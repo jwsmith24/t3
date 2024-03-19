@@ -197,7 +197,7 @@ button:hover {
 }
 
 
-#popup {
+.popup {
   position: fixed;
   top: 25%;
   left: 25%;
