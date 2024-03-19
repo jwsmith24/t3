@@ -209,8 +209,6 @@ const display = (() => {
             const result = playGame.checkGameStatus(currentPlayer);
             const results = document.getElementById('results');
 
-
-
             if (result.gameStatus === "win") {
                 results.textContent = `${result.player.getName()} wins!`
                 updateScore(result.player);
@@ -231,7 +229,6 @@ const display = (() => {
             };
 
         }
-
 
     });
     newGameButton.addEventListener('click', () => {
