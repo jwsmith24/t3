@@ -104,7 +104,6 @@ ul {
   grid-column: 1/2;
   text-align: center;
   margin-top: 5px;
-
 }
 
 .header h3 {
@@ -126,8 +125,6 @@ ul {
   gap: 10px;
   background-color: var(--sky100);
   padding: 10px;
-
-
 }
 
 .controls {
@@ -186,25 +183,18 @@ button:hover {
 
 
 .game-board {
-
   grid-row: 2/3;
   grid-column: 1/2;
-
   display: grid;
   grid-template-columns: repeat(3, minmax(115px, 1fr));
   grid-template-rows: repeat(3, minmax(100px, 1fr));
 
   justify-items: center;
   align-items: center;
-
   gap: 5px;
-
   border: 1px solid transparent;
-
   background-color: var(--sky600);
-
 }
-
 
 .popup {
   position: fixed;

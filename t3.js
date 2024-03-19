@@ -289,7 +289,6 @@ const display = (() => {
         players.player2.setName(p2input.value);
 
         displayCurrentPlayer(players.player1.getName());
-
     }
 
     function clearInputs() {
@@ -298,7 +297,6 @@ const display = (() => {
 
         p1input.value = '';
         p2input.value = '';
-
     };
 
     // at the end of the turn, updates current player text to next player
