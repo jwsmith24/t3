@@ -105,7 +105,7 @@ const playGame = (() => {
     let roundCount = 1;
 
     const getRound = () => roundCount;
-    const getPlayers = () => players;
+    const getPlayers = () => players();
 
     const incrementRoundCount = () => roundCount++;
 
@@ -117,14 +117,16 @@ const playGame = (() => {
 
     // Create players and wrap them up nicely in an object
     const players = (() => {
-        let player1Name = "player1";
-        let player2Name = "player2";
+        let player1Name = "Player 1";
+        let player2Name = "Player 2";
         const player1 = createPlayer(player1Name, '{ }');
         const player2 = createPlayer(player2Name, ';');
 
         return { player1, player2 };
 
-    })();
+    });
+
+
 
 
     // Checks all the potential winning subsets to see if all values match a player's symbol.
@@ -174,6 +176,7 @@ const display = (() => {
     gameBoardDisplay.addEventListener('click', (event) => {
         // pull in players
         const players = playGame.getPlayers();
+        console.log(players);
 
         // id format: "space-#"
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
@@ -256,6 +259,8 @@ const display = (() => {
 
         p1Name.textContent = p1input.value;
         p2Name.textContent = p2input.value;
+
+        // create character objects
 
     }
 
