@@ -113,6 +113,7 @@ const playGame = (() => {
     const getPlayers = () => players;
 
     const incrementRoundCount = () => roundCount++;
+    const resetRoundCount = () => roundCount = 0;
 
 
     // actual board represented as an array
@@ -149,7 +150,7 @@ const playGame = (() => {
         return { "gameStatus": "playing", player };
     };
 
-    return { getRound, incrementRoundCount, getPlayers, checkGameStatus };
+    return { getRound, incrementRoundCount, resetRoundCount, getPlayers, checkGameStatus };
 
 })();
 
@@ -214,9 +215,29 @@ const display = (() => {
             results.textContent = "It's a tie!";
             // Score doesn't increase on tie
             endGamePopup.showModal();
+        } else {
+            displayNextPlayer(currentPlayer, players);
         }
 
+
+
     });
+    // at the end of the turn, updates current player text to next player
+    function displayNextPlayer(currentPlayer, players) {
+        const turnStatus = document.getElementById('turn-status');
+
+        if (currentPlayer === players.player1) {
+            turnStatus.textContent = `${players.player2.getName()}'s turn`;
+        } else {
+            turnStatus.textContent = `${players.player1.getName()}'s turn`;
+        }
+
+    };
+
+    function displayCurrentPlayer(currentPlayerName) {
+        const turnStatus = document.getElementById('turn-status');
+        turnStatus.textContent = `${currentPlayerName}'s turn`;
+    }
 
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
@@ -252,7 +273,9 @@ const display = (() => {
     function startGame() {
 
         resetBoard();
+        playGame.resetRoundCount();
         clearInputs();
+
     };
 
     function resetScore() {
@@ -289,6 +312,8 @@ const display = (() => {
         players.player1.setName(p1input.value);
         p2Name.textContent = p2input.value;
         players.player2.setName(p2input.value);
+
+        displayCurrentPlayer(players.player1.getName());
 
     }
 
