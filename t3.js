@@ -167,7 +167,6 @@ const display = (() => {
 
     const endGamePopup = document.getElementById('end-popup');
     const gameOverButton = document.getElementById('game-over-button');
-    const gameOverCloseButton = document.getElementById('game-over-cancel');
 
     // Player info
     const p1Name = document.getElementById('p1-display-name');
@@ -255,11 +254,6 @@ const display = (() => {
         startGame();
         endGamePopup.close();
 
-    });
-
-    gameOverCloseButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        endGamePopup.close();
     });
 
     function startGame() {
