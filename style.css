@@ -140,9 +140,10 @@ ul {
   align-items: center;
   justify-items: center;
 
+
   justify-content: space-between;
-  padding-left: 5px;
-  padding-right: 5px;
+  gap: 50px;
+  padding: 2px;
 }
 
 button {
