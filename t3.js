@@ -174,6 +174,8 @@ const display = (() => {
     const p2Name = document.getElementById('p2-display-name');
     const players = playGame.getPlayers();
 
+    const turnStatus = document.getElementById('turn-status');
+
     // Gameboard
     const gameBoardDisplay = document.querySelector('.game-board');
     const board = gameBoard.getBoard();
@@ -222,22 +224,6 @@ const display = (() => {
 
 
     });
-    // at the end of the turn, updates current player text to next player
-    function displayNextPlayer(currentPlayer, players) {
-        const turnStatus = document.getElementById('turn-status');
-
-        if (currentPlayer === players.player1) {
-            turnStatus.textContent = `${players.player2.getName()}'s turn`;
-        } else {
-            turnStatus.textContent = `${players.player1.getName()}'s turn`;
-        }
-
-    };
-
-    function displayCurrentPlayer(currentPlayerName) {
-        const turnStatus = document.getElementById('turn-status');
-        turnStatus.textContent = `${currentPlayerName}'s turn`;
-    }
 
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
@@ -278,13 +264,6 @@ const display = (() => {
 
     };
 
-    function resetScore() {
-        const p1Score = document.getElementById('p1-score');
-        const p2Score = document.getElementById('p2-score');
-        p1Score.textContent = 0;
-        p2Score.textContent = 0;
-    }
-
     function updateScore(player) {
         const p1Score = document.getElementById('p1-score');
         const p2Score = document.getElementById('p2-score');
@@ -298,10 +277,6 @@ const display = (() => {
         } else {
             p1Score.textContent = newScore;
         }
-
-
-
-
     }
 
     function setPlayerNames() {
@@ -324,17 +299,28 @@ const display = (() => {
         p1input.value = '';
         p2input.value = '';
 
+    };
+
+    // at the end of the turn, updates current player text to next player
+    function displayNextPlayer(currentPlayer, players) {
+        if (currentPlayer === players.player1) {
+            turnStatus.textContent = `${players.player2.getName()}'s turn`;
+        } else {
+            turnStatus.textContent = `${players.player1.getName()}'s turn`;
+        }
 
     };
+    // Used for displaying the initial first player
+    function displayCurrentPlayer(currentPlayerName) {
+        turnStatus.textContent = `${currentPlayerName}'s turn`;
+    }
 
     // Clear the array and upate the display
     const resetBoard = () => {
         boardOptions.clearBoard();
         refreshGameBoard();
 
-
     };
-
 
     const refreshGameBoard = () => {
 
@@ -352,7 +338,6 @@ const display = (() => {
 
         });
     };
-
 
     return { refreshGameBoard };
 
