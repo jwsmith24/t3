@@ -209,6 +209,11 @@ button:hover {
 
 }
 
+#end-popup {
+  left: 35%;
+
+}
+
 .info {
   display: grid;
   grid-template-columns: 1fr;
@@ -222,18 +227,26 @@ button:hover {
   padding: 10px;
 }
 
+.game-over-wrapper {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(auto-fit, 1fr);
+}
+
 
 .modal-buttons {
   display: flex;
 }
 
-.modal-buttons button {
+.modal-buttons>* {
   background-color: rgba(30, 255, 41, 0.2);
 }
 
-.info button:hover {
+.modal-buttons>*:hover {
   background-color: rgba(30, 255, 41, 0.5);
 }
+
 
 .popup-header {
   margin-bottom: 15px;
