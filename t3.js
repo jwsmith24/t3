@@ -180,9 +180,7 @@ const display = (() => {
 
 
     gameBoardDisplay.addEventListener('click', (event) => {
-        // pull in players
-        const players = playGame.getPlayers();
-        console.log(players);
+
 
         // id format: "space-#"
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
@@ -196,7 +194,7 @@ const display = (() => {
             playGame.incrementRoundCount();
 
         } else {
-            // add a red flash on the space
+            //TODO: add a red flash on the space
             console.log("space taken!");
 
         }
@@ -206,10 +204,15 @@ const display = (() => {
         const results = document.getElementById('results');
 
 
+
         if (result.gameStatus === "win") {
             results.textContent = `${result.player.getName()} wins!`
             updateScore(result.player);
+            endGamePopup.showModal();
 
+        } else if (result.gameStatus === "tie") {
+            results.textContent = "It's a tie!";
+            // Score doesn't increase on tie
             endGamePopup.showModal();
         }
 
@@ -217,7 +220,6 @@ const display = (() => {
 
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
-
     });
 
     startGameButton.addEventListener('click', (e) => {
