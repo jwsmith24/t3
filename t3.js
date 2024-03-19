@@ -149,7 +149,7 @@ const playGame = (() => {
                 console.log("This space already has a piece, choose again!");
             }
         }
-        //display.refreshGameBoard();
+        display.refreshGameBoard();
         return checkGameStatus(player);
     }
 
@@ -157,7 +157,7 @@ const playGame = (() => {
 
         const result = board.isGameOver(player.getSymbol());
 
-        if (result.status === "Win") {
+        if (result.status === "win") {
             let stats = { "gameStatus": "win" };
             endGame(stats, player);
             return true;
