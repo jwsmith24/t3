@@ -183,49 +183,54 @@ const display = (() => {
 
 
     gameBoardDisplay.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // Check that the clicked element is a space on the game board. If not, do nothing
+        if (target.classList.contains('space')) {
+
+            // id format: "space-#"
+            const spaceIndex = parseInt(target.id.split('-')[1]);
+            // player 1 - evens, player 2 - odds
+            const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
+
+            if (!board[spaceIndex].hasPiece()) {
+
+                board[spaceIndex].placeMarker(currentPlayer.getSymbol());
+                refreshGameBoard(); // refresh UI
+                playGame.incrementRoundCount();
+
+            } else {
+                //TODO: add a red flash on the space
+                console.log("space taken!");
+
+            }
+
+            // Check for end of game.
+            const result = playGame.checkGameStatus(currentPlayer);
+            const results = document.getElementById('results');
 
 
-        // id format: "space-#"
-        const spaceIndex = parseInt(event.target.id.split('-')[1]);
-        // player 1 - evens, player 2 - odds
-        const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
-        if (!board[spaceIndex].hasPiece()) {
+            if (result.gameStatus === "win") {
+                results.textContent = `${result.player.getName()} wins!`
+                updateScore(result.player);
+                resetTurnStatus();
+                endGamePopup.showModal();
 
-            board[spaceIndex].placeMarker(currentPlayer.getSymbol());
-            refreshGameBoard(); // refresh UI
-            playGame.incrementRoundCount();
+            } else if (result.gameStatus === "tie") {
+                results.textContent = "It's a tie!";
+                // Score doesn't increase on tie
+                resetTurnStatus();
+                endGamePopup.showModal();
+            } else {
+                displayNextPlayer(currentPlayer, players);
+            }
 
-        } else {
-            //TODO: add a red flash on the space
-            console.log("space taken!");
+            function resetTurnStatus() {
+                turnStatus.textContent = "Start a new game!";
+            };
 
         }
-
-        // Check for end of game.
-        const result = playGame.checkGameStatus(currentPlayer);
-        const results = document.getElementById('results');
-
-
-
-        if (result.gameStatus === "win") {
-            results.textContent = `${result.player.getName()} wins!`
-            updateScore(result.player);
-            resetTurnStatus();
-            endGamePopup.showModal();
-
-        } else if (result.gameStatus === "tie") {
-            results.textContent = "It's a tie!";
-            // Score doesn't increase on tie
-            resetTurnStatus();
-            endGamePopup.showModal();
-        } else {
-            displayNextPlayer(currentPlayer, players);
-        }
-
-        function resetTurnStatus() {
-            turnStatus.textContent = "Start a new game!";
-        };
 
 
     });
