@@ -5,6 +5,8 @@ const gameBoard = function () {
 
     const board = [];
 
+    const getBoard = () => board;
+
     const checkWin = (symbol) => {
 
         // All possible subsets that lead to a win if they all have the same value: (a 2D array would probably be a better approach to be more scalable)
@@ -75,7 +77,7 @@ const gameBoard = function () {
     // ensure board is initialized first
     initBoard();
 
-    return { board, clearBoard, isGameOver, initBoard };;
+    return { getBoard, clearBoard, isGameOver, initBoard };;
 
 }();
 
@@ -109,7 +111,7 @@ const playGame = (() => {
 
 
     // actual board represented as an array
-    const board = gameBoard;
+    const board = gameBoard.getBoard();
 
 
     // Create players and wrap them up nicely in an object
@@ -154,7 +156,7 @@ const playGame = (() => {
         return false;
     }
 
-    return { getRound, incrementRoundCount, getPlayers };
+    return { getRound, incrementRoundCount, getPlayers, checkGameStatus };
 
 })();
 
@@ -173,6 +175,7 @@ const display = (() => {
 
     // Gameboard
     const gameBoardDisplay = document.querySelector('.game-board');
+    const board = gameBoard.getBoard();
 
 
     gameBoardDisplay.addEventListener('click', (event) => {
@@ -184,12 +187,12 @@ const display = (() => {
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
         console.log("spaceIndexString:", spaceIndex);
 
-        if (!gameBoard.board[spaceIndex].hasPiece()) {
+        if (!board[spaceIndex].hasPiece()) {
 
             // player 1 - evens, player 2 - odds
             const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
-            gameBoard.board[spaceIndex].placeMarker(currentPlayer.getSymbol());
+            board[spaceIndex].placeMarker(currentPlayer.getSymbol());
             refreshGameBoard(); // refresh UI
 
             playGame.incrementRoundCount();
@@ -199,20 +202,26 @@ const display = (() => {
             console.log("space taken!");
 
         }
+
+        const result = playGame.checkGameStatus();
+
     })
 
 
 
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
+
     });
 
     startGameButton.addEventListener('click', (e) => {
         e.preventDefault();
+
         newGameButton.textContent = "Reset Game";
         setPlayerNames();
         p1Score.textContent = 0;
         p2Score.textContent = 0;
+        refreshGameBoard();
         newGamePopUp.close();
     });
 
@@ -229,7 +238,8 @@ const display = (() => {
         console.log(p2Name.textContent);
     }
 
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener('click', (e) => {
+        e.preventDefault();
         newGamePopUp.close();
     });
 
@@ -238,12 +248,12 @@ const display = (() => {
 
         gameBoardDisplay.innerHTML = "";
 
-        gameBoard.board.forEach((item, index) => {
+        board.forEach((item, index) => {
             const space = document.createElement('div');
             space.id = `space-${index}`;
             space.classList.add("space");
 
-            space.setAttribute('data-marker', gameBoard.board[index].getPiece());
+            space.setAttribute('data-marker', board[index].getPiece());
 
             gameBoardDisplay.appendChild(space);
 
