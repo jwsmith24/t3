@@ -126,16 +126,6 @@ const playGame = (() => {
 
     })();
 
-    // Displays game end dialog after win or tie conditions are met. Displays results and updates player score and resets the board.
-    function endGame(stats, player) {
-
-
-        if (stats.gameStatus === "win") {
-            console.log(`${player.getName()} wins!`);
-        } else if (stats.gameStatus === "tie") {
-            console.log("It's a tie!");
-        }
-    }
 
     // Checks all the potential winning subsets to see if all values match a player's symbol.
     function checkGameStatus(player) {
@@ -143,30 +133,33 @@ const playGame = (() => {
         const result = boardOptions.isGameOver(player.getSymbol());
 
         if (result.status === "win") {
-            let stats = { "gameStatus": "win" };
-            endGame(stats, player);
-            return true;
+            return { "gameStatus": "win", player };
+
         } else if (result.status === "tie") {
-            let stats = { "gameStatus": "tie" };
-            endGame(stats);
-            return true;
+            return { "gameStatus": "tie", player };
         }
 
-        return false;
-    }
+        return { "gameStatus": "playing" };
+    };
 
     return { getRound, incrementRoundCount, getPlayers, checkGameStatus };
 
 })();
+
 
 // UI Module
 const display = (() => {
 
     // Controls
     const newGameButton = document.getElementById("new-game");
+
     const newGamePopUp = document.getElementById("start-popup");
     const startGameButton = document.getElementById('start-game');
     const cancelButton = document.getElementById('cancel');
+
+    const endGamePopup = document.getElementById('end-popup');
+    const gameOverButton = document.getElementById('game-over-button');
+    const gameOverCloseButton = document.getElementById('game-over-cancel');
 
     // Player info
     const p1Name = document.getElementById('p1-display-name');
@@ -179,13 +172,11 @@ const display = (() => {
 
 
     gameBoardDisplay.addEventListener('click', (event) => {
-        console.log(event.target.id);
+        // pull in players
         const players = playGame.getPlayers();
-        console.log(players);
 
         // id format: "space-#"
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
-        console.log("spaceIndexString:", spaceIndex);
         // player 1 - evens, player 2 - odds
         const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
@@ -193,20 +184,26 @@ const display = (() => {
 
             board[spaceIndex].placeMarker(currentPlayer.getSymbol());
             refreshGameBoard(); // refresh UI
-
             playGame.incrementRoundCount();
 
         } else {
-
+            // add a red flash on the space
             console.log("space taken!");
 
         }
 
+        // Check for end of game.
         const result = playGame.checkGameStatus(currentPlayer);
+        const results = document.getElementById('results');
 
-    })
 
+        if (result.gameStatus === "win") {
+            results.textContent = `${result.player.getName()} wins!`
 
+            endGamePopup.showModal();
+        }
+
+    });
 
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
@@ -217,14 +214,34 @@ const display = (() => {
         e.preventDefault();
         setPlayerNames();
         newGameButton.textContent = "Reset Game";
-        resetBoard();
-
-
-
-
-        clearInputs();
+        startGame();
         newGamePopUp.close();
     });
+
+    cancelButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearInputs();
+
+        newGamePopUp.close();
+    });
+
+    gameOverButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        startGame();
+        endGamePopup.close();
+
+    });
+
+    gameOverCloseButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        endGamePopup.close();
+    });
+
+    function startGame() {
+
+        resetBoard();
+        clearInputs();
+    };
 
     function resetScore() {
         const p1Score = document.getElementById('p1-score');
@@ -252,22 +269,13 @@ const display = (() => {
 
     };
 
-
-    cancelButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        clearInputs();
-
-        newGamePopUp.close();
-    });
-
     // Clear the array and upate the display
     const resetBoard = () => {
         boardOptions.clearBoard();
-        p1Score.textContent = 0;
-        p2Score.textContent = 0;
         refreshGameBoard();
+        resetScore();
 
-    }
+    };
 
 
     const refreshGameBoard = () => {
@@ -275,6 +283,7 @@ const display = (() => {
         gameBoardDisplay.innerHTML = "";
 
         board.forEach((item, index) => {
+
             const space = document.createElement('div');
             space.id = `space-${index}`;
             space.classList.add("space");
@@ -284,7 +293,7 @@ const display = (() => {
             gameBoardDisplay.appendChild(space);
 
         });
-    }
+    };
 
 
     return { refreshGameBoard };
