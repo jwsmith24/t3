@@ -211,20 +211,24 @@ const display = (() => {
         if (result.gameStatus === "win") {
             results.textContent = `${result.player.getName()} wins!`
             updateScore(result.player);
+            resetTurnStatus();
             endGamePopup.showModal();
 
         } else if (result.gameStatus === "tie") {
             results.textContent = "It's a tie!";
             // Score doesn't increase on tie
+            resetTurnStatus();
             endGamePopup.showModal();
         } else {
             displayNextPlayer(currentPlayer, players);
         }
 
+        function resetTurnStatus() {
+            turnStatus.textContent = "Start a new game!";
+        };
 
 
     });
-
     newGameButton.addEventListener('click', () => {
         newGamePopUp.showModal();
     });
@@ -302,7 +306,7 @@ const display = (() => {
     };
 
     // at the end of the turn, updates current player text to next player
-    function displayNextPlayer(currentPlayer, players) {
+    function displayNextPlayer(currentPlayer) {
         if (currentPlayer === players.player1) {
             turnStatus.textContent = `${players.player2.getName()}'s turn`;
         } else {
