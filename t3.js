@@ -112,6 +112,7 @@ const playGame = (() => {
 
     // actual board represented as an array
     const board = gameBoard.getBoard();
+    const boardOptions = gameBoard;
 
 
     // Create players and wrap them up nicely in an object
@@ -141,7 +142,7 @@ const playGame = (() => {
 
     function checkGameStatus(player) {
 
-        const result = board.isGameOver(player.getSymbol());
+        const result = boardOptions.isGameOver(player.getSymbol());
 
         if (result.status === "win") {
             let stats = { "gameStatus": "win" };
@@ -170,12 +171,16 @@ const display = (() => {
     const cancelButton = document.getElementById('cancel');
 
     // Player info
+    const p1Name = document.getElementById('p1-display-name');
+    const p2Name = document.getElementById('p2-display-name');
+
     const p1Score = document.getElementById('p1-score');
     const p2Score = document.getElementById('p2-score');
 
     // Gameboard
     const gameBoardDisplay = document.querySelector('.game-board');
     const board = gameBoard.getBoard();
+    const boardOptions = gameBoard;
 
 
     gameBoardDisplay.addEventListener('click', (event) => {
@@ -186,11 +191,10 @@ const display = (() => {
         // id format: "space-#"
         const spaceIndex = parseInt(event.target.id.split('-')[1]);
         console.log("spaceIndexString:", spaceIndex);
+        // player 1 - evens, player 2 - odds
+        const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
         if (!board[spaceIndex].hasPiece()) {
-
-            // player 1 - evens, player 2 - odds
-            const currentPlayer = playGame.getRound() % 2 === 0 ? players.player1 : players.player2;
 
             board[spaceIndex].placeMarker(currentPlayer.getSymbol());
             refreshGameBoard(); // refresh UI
@@ -203,7 +207,7 @@ const display = (() => {
 
         }
 
-        const result = playGame.checkGameStatus();
+        const result = playGame.checkGameStatus(currentPlayer);
 
     })
 
@@ -218,30 +222,48 @@ const display = (() => {
         e.preventDefault();
 
         newGameButton.textContent = "Reset Game";
+
         setPlayerNames();
         p1Score.textContent = 0;
         p2Score.textContent = 0;
-        refreshGameBoard();
+        clearInputs();
         newGamePopUp.close();
     });
 
     function setPlayerNames() {
-        const p1Name = document.getElementById('p1-display-name');
-        const p2Name = document.getElementById('p2-display-name');
+        const p1input = document.getElementById('p1-name');
+        const p2input = document.getElementById('p2-name');
 
-        const p1input = document.getElementById('p1-name').value;
-        const p2input = document.getElementById('p2-name').value;
-
-        p1Name.textContent = p1input;
-        console.log(p1Name.textContent);
-        p2Name.textContent = p2input;
-        console.log(p2Name.textContent);
+        p1Name.value = p1input;
+        p2Name.value = p2input;
+       
     }
+
+    function clearInputs() {
+        const p1input = document.getElementById('p1-name');
+        const p2input = document.getElementById('p2-name');
+
+        p1input.value = '';
+        p2input.value = '';
+     
+
+    };
+
 
     cancelButton.addEventListener('click', (e) => {
         e.preventDefault();
+        clearInputs();
+
         newGamePopUp.close();
     });
+
+    // Clear the array and upate the display
+    const resetBoard = () => {
+        boardOptions.clearBoard();
+        p1Score.textContent = 0;
+        p2Score.textContent = 0;
+        refreshGameBoard();
+    }
 
 
     const refreshGameBoard = () => {
